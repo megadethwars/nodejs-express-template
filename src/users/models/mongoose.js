@@ -30,6 +30,10 @@ const User = mongoose.model(
     age: {
       type: Number,
       required: true,
+    },
+    role: {
+      type: Number,
+      required: true,
     }
 
   },

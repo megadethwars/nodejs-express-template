@@ -16,7 +16,8 @@ module.exports.signUp = async (res, parameters) => {
     lastName,
     nameUser,
     phone, 
-    age
+    age,
+    role,
   } = parameters;
 
   if (password === passwordConfirmation) {
@@ -28,6 +29,7 @@ module.exports.signUp = async (res, parameters) => {
       lastName,
       phone,
       age,
+      role,
     });
 
     try {
@@ -45,9 +47,11 @@ module.exports.signUp = async (res, parameters) => {
         name: savedUser.name,
         lastName: savedUser.lastName,
         phone: savedUser.phone,
-        age: savedUser.age
+        age: savedUser.age,
+        role:savedUser.role
+
       };
-      return res.status(201).json(userResponse);
+      return res.status(201).json(savedUser);
 
       //return res.status(201).json({ token });
     } catch (error) {
@@ -97,3 +101,51 @@ module.exports.listUsers = async (req, res) => {
     res.status(500).json({ status: 500, message: error.message });
   }
 };
+
+module.exports.getUserById = async (req, res) => {
+  try {
+    const user = await schemes.User.findById(req.params.id, '-password'); // Excluir la contraseña del resultado
+    if (!user) {
+      return res.status(404).json({ status: 404, message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  }
+};
+
+module.exports.getUserByUserName = async (req, res) => {
+  try {
+    const user = await schemes.User.find({ username: req.params.username }, '-password'); // Excluir la contraseña del resultado
+    if (!user) {
+      return res.status(404).json({ status: 404, message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  }
+};
+
+
+module.exports.updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id; // ID del usuario a actualizar
+    const updates = req.body; // Campos a actualizar (pueden incluir nombre, apellido, teléfono, etc.)
+
+    // Encuentra y actualiza el usuario
+    const updatedUser = await schemes.User.findOneAndUpdate(userId, updates, {
+      new: true, // Devuelve el usuario actualizado
+      runValidators: true, // Ejecuta las validaciones del esquema
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ status: 404, message: 'Usuario no encontrado' });
+    }
+
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  }
+};
+
+

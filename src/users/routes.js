@@ -17,7 +17,14 @@ router.post(
 
 // Nuevo endpoint para listar todos los usuarios protegido
 //router.get('/api/v1/users', authenticateJWT, listUsers);
-router.get('/api/v1/users', controller.listUsers);
+router.get('/api/v1', controller.listUsers);
+
+router.patch('/api/v1/:id', controller.updateUser);
+
+//router.get('/users/:id', authenticateJWT, getUserById);
+router.get('/api/v1/:id', controller.getUserById);
+
+router.get('/api/v1/findByUserName/:username', controller.getUserByUserName);
 
 //router.get('/users', authenticateJWT, schemas.listUsers);
 
