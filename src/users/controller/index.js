@@ -13,8 +13,10 @@ module.exports.signUp = async (res, parameters) => {
     passwordConfirmation,
     email,
     username,
-    name,
     lastName,
+    nameUser,
+    phone, 
+    age
   } = parameters;
 
   if (password === passwordConfirmation) {
@@ -22,8 +24,10 @@ module.exports.signUp = async (res, parameters) => {
       password: Bcrypt.hashSync(password, 10),
       email,
       username,
-      name,
+      nameUser,
       lastName,
+      phone,
+      age,
     });
 
     try {
@@ -35,7 +39,17 @@ module.exports.signUp = async (res, parameters) => {
         { expiresIn: config.TOKEN_EXPIRES_IN }
       );
 
-      return res.status(201).json({ token });
+      const userResponse = {
+        username: savedUser.username,
+        email: savedUser.email,
+        name: savedUser.name,
+        lastName: savedUser.lastName,
+        phone: savedUser.phone,
+        age: savedUser.age
+      };
+      return res.status(201).json(userResponse);
+
+      //return res.status(201).json({ token });
     } catch (error) {
       return res.status(400).json({
         status: 400,
@@ -72,4 +86,14 @@ module.exports.login = (req, res) => {
 // Nuevo endpoint "Hello World" protegido con JWT
 module.exports.helloWorld = (req, res) => {
   res.json({ message: 'Hello World!' });
+};
+
+
+module.exports.listUsers = async (req, res) => {
+  try {
+    const users = await schemes.User.find({}, '-password'); // Excluir la contraseña de los resultados
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  }
 };

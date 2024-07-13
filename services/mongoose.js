@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const config = require('../config');
 
 const dbUrl = config.dbUrlMongoDB;
-
+console.log("algo");
 mongoose.connect(
   dbUrl,
   { useNewUrlParser: true, useUnifiedTopology: true }, // To avoid deprecated options

@@ -19,6 +19,19 @@ const User = mongoose.model(
       type: String,
       required: true,
     },
+    nameUser: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
+    age: {
+      type: Number,
+      required: true,
+    }
+
   },
   'users'
 );
