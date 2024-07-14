@@ -21,6 +21,8 @@ router.get('/api/v1', controller.listUsers);
 
 router.patch('/api/v1/:id', controller.updateUser);
 
+router.delete('/api/v1/:id', controller.deleteUser);
+
 //router.get('/users/:id', authenticateJWT, getUserById);
 router.get('/api/v1/:id', controller.getUserById);
 

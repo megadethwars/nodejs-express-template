@@ -34,6 +34,11 @@ const User = mongoose.model(
     role: {
       type: Number,
       required: true,
+    },
+    fechaDeCreacion: {
+      type: Date,
+      required: false,
+      default: Date.now
     }
 
   },

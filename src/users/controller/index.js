@@ -30,28 +30,25 @@ module.exports.signUp = async (res, parameters) => {
       phone,
       age,
       role,
+      fechaDeCreacion: new Date()
     });
 
     try {
       const savedUser = await newUser.save();
 
-      const token = jwt.sign(
-        { email, id: savedUser.id, username },
-        config.API_KEY_JWT,
-        { expiresIn: config.TOKEN_EXPIRES_IN }
-      );
+     
 
       const userResponse = {
         username: savedUser.username,
         email: savedUser.email,
-        name: savedUser.name,
+        nameUser: savedUser.nameUser,
         lastName: savedUser.lastName,
         phone: savedUser.phone,
         age: savedUser.age,
-        role:savedUser.role
-
+        role: savedUser.role,
+        fechaDeCreacion: savedUser.fechaDeCreacion
       };
-      return res.status(201).json(savedUser);
+      return res.status(201).json(userResponse);
 
       //return res.status(201).json({ token });
     } catch (error) {
@@ -160,3 +157,21 @@ module.exports.updateUser = async (req, res) => {
 };
 
 
+
+module.exports.deleteUser = async (req, res) => {
+  try {
+    const user = await schemes.User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ status: 404, message: 'User not found' });
+    }
+
+    if (user.role === 1) {
+      return res.status(403).json({ status: 403, message: 'Cannot delete an admin user' });
+    }
+
+    await schemes.User.findByIdAndDelete(req.params.id);
+    res.status(200).json({ status: 200, message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  }
+};
