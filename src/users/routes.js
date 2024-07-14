@@ -30,7 +30,7 @@ router.get('/api/v1/findByUserName/:username', controller.getUserByUserName);
 
 //router.get('/users', authenticateJWT, schemas.listUsers);
 
-router.post('/login', controller.login);
+router.post('/api/v1/login', controller.login);
 
 router.get('/', (req, res) => {
   res.send('Hello, World!');
